@@ -75,7 +75,10 @@ jobs:
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
       - name: Deploy image
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-add - <<< "${{ secrets.DOCKERDEPLOY_PK }}"
           # ssh -i <(echo "${{ secrets.DOCKERDEPLOY_PK }}") dockerdeploy@157.90.225.207
           ssh dockerdeploy@157.90.225.207
