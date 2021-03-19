@@ -30,7 +30,7 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-      - name: Calculate Variables
+      - name: Calculate Publishing Variables
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
 
@@ -46,25 +46,19 @@ jobs:
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
 
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-
           echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Use the value
+      - name: Echoing the publishing Variables
         run: |
-          echo "${{env.IMAGE_ID}}" # This will output 'image_id'
-          echo "${{env.VERSION}}" # This will output 'version'
+          # ${{env.VERSION}} == VERSION
+          echo IMAGE_ID="${{env.IMAGE_ID}}"
+          echo VERSION="${{env.VERSION}}"
 
       - name: Push image
         run: |
-          docker tag $IMAGE_NAME ${{env.IMAGE_ID}}:${{env.VERSION}}
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-
-      - name: Use the value
-        run: |
-          echo "${{ env.action_state }}" # This will output 'yellow'
         
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
@@ -74,10 +68,11 @@ jobs:
           KEY: ${{ secrets.DOCKERDEPLOY_PK }}
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,IMAGE_ID
           script: |
-            echo $(echo $IMAGE_ID)
+            echo $IMAGE_ID
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-            docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
+            # docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
+            docker pull $IMAGE_ID
             
             echo Remove old container
             docker rm -f webapp
