@@ -74,3 +74,6 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+      - name: Deploy image
+        run: |
+          ssh -i <(echo "${{ secrets.DOCKERDEPLOY_PK }}") dockerdeploy@157.90.225.207
