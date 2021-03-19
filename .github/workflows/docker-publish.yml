@@ -110,14 +110,20 @@ jobs:
           KEY: ${{ secrets.DOCKERDEPLOY_PK }}
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND
           script: |
+
+            docker login -u JKamsker -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
             docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
+            docker rm -f webapp
+            docker run --rm -d -p 8080:80 --name webapp docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions
+
+            #docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
             
             # Stop running container
-            docker stop webapp
+            #docker stop webapp
 
             # Remove old container
-            docker rm webapp
+            #docker rm webapp
 
 
             # Run a new container from a new image
-            docker run --rm -d -p 8080:80 --name webapp docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions
+            #docker run --rm -d -p 8080:80 --name webapp docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions
