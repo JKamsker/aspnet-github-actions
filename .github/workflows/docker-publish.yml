@@ -49,6 +49,9 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
+          # set state
+          echo "action_state=yellow" >> $GITHUB_ENV
+
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
@@ -58,6 +61,10 @@ jobs:
     needs: build_and_push
 
     steps:
+      - name: Use the value
+        id: step_two
+        run: |
+        echo "${{ env.action_state }}" # This will output 'yellow'
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
         with:
