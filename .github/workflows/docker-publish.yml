@@ -76,4 +76,6 @@ jobs:
           docker push $IMAGE_ID:$VERSION
       - name: Deploy image
         run: |
-          ssh -i <(echo "${{ secrets.DOCKERDEPLOY_PK }}") dockerdeploy@157.90.225.207
+          ssh-add - <<< "${{ secrets.DOCKERDEPLOY_PK }}"
+          # ssh -i <(echo "${{ secrets.DOCKERDEPLOY_PK }}") dockerdeploy@157.90.225.207
+          ssh dockerdeploy@157.90.225.207
