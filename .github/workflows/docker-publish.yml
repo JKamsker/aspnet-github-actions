@@ -113,12 +113,9 @@ jobs:
             docker login -u JKamsker -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
             docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
             
-            # Stop running container
-            docker stop webapp
-
-            # Remove old container
-            docker rm webapp
+            echo Remove old container
+            docker rm -f webapp
 
 
-            # Run a new container from a new image
+            echo Run a new container from a new image
             docker run --rm -d -p 8080:80 --name webapp docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions
