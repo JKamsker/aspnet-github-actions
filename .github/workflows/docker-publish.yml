@@ -49,38 +49,18 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
-          echo "image_id=$IMAGE_ID" >> $GITHUB_ENV
-          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Use the value
         run: |
-          echo "${{ env.image_id }}" # This will output 'image_id'
-          echo "${{ env.version }}" # This will output 'version'
+          echo "${{env.IMAGE_ID}}" # This will output 'image_id'
+          echo "${{env.VERSION}}" # This will output 'version'
 
       - name: Push image
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-
-          # set state
-          echo "action_state=yellow" >> $GITHUB_ENV
-
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME ${{env.IMAGE_ID}}:${{env.VERSION}}
+          docker push ${{ env.IMAGE_ID }}:${{ env.VERSION }}
 
       - name: Use the value
         run: |
