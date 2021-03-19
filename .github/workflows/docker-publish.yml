@@ -78,7 +78,11 @@ jobs:
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
+          echo !!!!!!!1
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          echo !!!!!!2
           ssh-add - <<< "${{ secrets.DOCKERDEPLOY_PK }}"
+          echo !!!!!3
           # ssh -i <(echo "${{ secrets.DOCKERDEPLOY_PK }}") dockerdeploy@157.90.225.207
           ssh dockerdeploy@157.90.225.207
+           echo !!!!!4
