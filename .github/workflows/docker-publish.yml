@@ -83,5 +83,16 @@ jobs:
           echo !!!!!!2
           ssh-add - <<< "${{ secrets.DOCKERDEPLOY_PK }}"
           echo !!!!!3
-          ssh -o StrictHostKeyChecking=no dockerdeploy@157.90.225.207 
+          # ssh -o StrictHostKeyChecking=no dockerdeploy@157.90.225.207 
+
+          docker context create --docker host=ssh://root@157.90.225.207 --description="Remote engine" my-remote-engine
+          docker context use my-remote-engine
+
+          docker login -u JKamsker -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
+          docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
+
+          docker rm -f webapp
+          docker run --rm -d -p 8080:80 --name webapp docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions
+
+
           echo !!!!!4
