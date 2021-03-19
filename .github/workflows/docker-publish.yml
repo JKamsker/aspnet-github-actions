@@ -36,14 +36,14 @@ jobs:
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    # needs: test
+  # push:
+  #   # Ensure test job passes before pushing image.
+  #   # needs: test
 
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push'
 
-    steps:
+  #   steps:
       # - uses: actions/checkout@v2
 
       # - name: Build image
