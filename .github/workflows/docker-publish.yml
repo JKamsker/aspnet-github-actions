@@ -51,7 +51,7 @@ jobs:
 
       - name: Echoing the publishing Variables
         run: |
-          # ${{env.VERSION}} == VERSION
+          # ${{env.IMAGE_ID}} == $IMAGE_ID
           echo IMAGE_ID="${{env.IMAGE_ID}}"
           echo VERSION="${{env.VERSION}}"
 
@@ -72,11 +72,11 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
             # docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
-            docker pull $IMAGE_ID
+            docker pull ${{env.IMAGE_ID}}
             
             echo Remove old container
             docker rm -f webapp
 
 
             echo Run a new container from a new image
-            docker run --rm -d -p 8080:80 --name webapp docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions
+            docker run --rm -d -p 8080:80 --name webapp ${{env.IMAGE_ID}}
