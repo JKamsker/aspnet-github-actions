@@ -60,7 +60,7 @@ jobs:
       - name: Push image
         run: |
           docker tag $IMAGE_NAME ${{env.IMAGE_ID}}:${{env.VERSION}}
-          docker push ${{ env.IMAGE_ID }}:${{ env.VERSION }}
+          docker push $IMAGE_ID:$VERSION
 
       - name: Use the value
         run: |
