@@ -54,17 +54,12 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
       - name: Use the value
         id: step_two
         run: |
           echo "${{ env.action_state }}" # This will output 'yellow'
-
-  deploy:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-    needs: build_and_push
-
-    steps:
+        
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
         with:
