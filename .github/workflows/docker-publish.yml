@@ -64,7 +64,7 @@ jobs:
       - name: Use the value
         id: step_two
         run: |
-        echo "${{ env.action_state }}" # This will output 'yellow'
+          echo "${{ env.action_state }}" # This will output 'yellow'
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
         with:
