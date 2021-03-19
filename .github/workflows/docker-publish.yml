@@ -64,9 +64,11 @@ jobs:
           HOST: ${{ secrets.DOCKERDEPLOY_HOST }}
           USERNAME: ${{ secrets.DOCKERDEPLOY_HOST_USER }}
           KEY: ${{ secrets.DOCKERDEPLOY_PK }}
-          #envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND
+          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,IMAGE_ID
           script: |
+            echo IMAGE_ID
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
             docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
             
             echo Remove old container
