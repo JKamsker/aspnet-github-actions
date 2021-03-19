@@ -113,10 +113,10 @@ jobs:
             docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
             
             # Stop running container
-            docker stop $(echo $IMAGE_NAME)
+            docker stop webapp
 
             # Remove old container
-            docker rm $(echo $IMAGE_NAME)
+            docker rm webapp
 
 
             # Run a new container from a new image
