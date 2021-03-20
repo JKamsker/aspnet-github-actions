@@ -68,15 +68,13 @@ jobs:
           KEY: ${{ secrets.DOCKERDEPLOY_PK }}
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,IMAGE_ID
           script: |
-            echo $IMAGE_ID
+            echo Pulling $IMAGE_ID
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-            # docker pull docker.pkg.github.com/jkamsker/aspnet-github-actions/aspnet-github-actions:latest
             docker pull ${{env.IMAGE_ID}}
             
             echo Remove old container
-            docker rm -f webapp
-
+            docker rm -f $(echo $IMAGE_NAME)
 
             echo Run a new container from a new image
-            docker run --rm -d -p 8080:80 --name webapp ${{env.IMAGE_ID}}
+            docker run --rm -d -p 8080:80 --name $(echo $IMAGE_NAME) ${{env.IMAGE_ID}}
